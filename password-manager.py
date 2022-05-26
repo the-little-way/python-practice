@@ -20,7 +20,7 @@ def loadKey():
 	#key.close()
 	return key
 
-##the random password generator, lim - 8 characters long
+#the random password generator, lim - 8 characters long
 
 def genPass():
 	alphaNum = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '#', '$' ]
@@ -40,7 +40,7 @@ def genPass():
 	return final
 
 
-## the features i.e. (1) show passwords, (2) add new password
+# the features i.e. (1) show passwords, (2) add new password
 
 def showPass():
     authUser = input("Type in your master password to continue:")
@@ -86,7 +86,7 @@ def addPass():
 	        continue
 
 
-## save info to file, a - newaccount, b - new password, c - authenticate, d - key
+# save info to file, a - newaccount, b - new password, c - authenticate, d - key
 
 def saveToFile(a, b, c, d):
     if c == "admin":
@@ -101,7 +101,7 @@ def saveToFile(a, b, c, d):
     	print("Oops, something went wrong...")
 
 
-## welcome to password manager
+# welcome to password manager
 
 getMode = input("""Welcome to EasyPy, a simple password manager -
 Type \"view\" to view your saved passwords
