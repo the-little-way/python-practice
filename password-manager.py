@@ -3,7 +3,7 @@
 import random
 from cryptography.fernet import Fernet
 
-'''
+"""
 # create key file, uncomment section below on first use
 def writeKey():
 	key = Fernet.generate_key()
@@ -11,41 +11,16 @@ def writeKey():
 		keyFile.write(key)
 
 writeKey()
-'''
+"""
 
 
 #load key for decryption
 def loadKey():
-	key = file.open("key.key", "rb").read()
-	file.close()
+	key = open("key.key", "rb").read()
+	#key.close()
 	return key
 
-
-## welcome to password manager
-
-getMode = input("""Welcome to EasyPy, a simple password manager -
-Type \"view\" to view your saved passwords
-Type \"add\" to add a new password for storage
-:""").lower()
-
-
-while True:
-    if getMode == "q":
-        print("You have successfully logged out.")
-        break
-    
-    elif getMode == "view":
-        showPass()
-	        
-    elif getMode == "add":
-        addPass()
-	        
-    else:
-        print("Sorry, you typed an invalid option")
-        continue
-
-
-## the random password generator, lim - 8 characters long
+##the random password generator, lim - 8 characters long
 
 def genPass():
 	alphaNum = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '#', '$' ]
@@ -60,7 +35,7 @@ def genPass():
 			break
 		i = i+1
 	#force atleast 1 special char at end
-	results[lim] = '$'
+	results[lim-1] = '$'
 	final = "".join(results)
 	return final
 
@@ -72,10 +47,11 @@ def showPass():
     newKey = loadKey() + authUser.encode()
     fer = Fernet(newKey)
 
-    with open('passwords.txt', 'ab') as file:
+    with open('passwords.txt', 'rb') as file:
     	for line in file:
     		results = file.readline()
     		print(fer.decrypt(results))
+
 
 def addPass():
 	while True:
@@ -98,23 +74,54 @@ def addPass():
 	            Type \"N\" to manually type-in your own:""")
 
 	        if passCheck == "y":
-	            saveToFile(newAccount, newPass, authUser)
+	            saveToFile(newAccount, newPass, authUser, fer)
+	            break
 
 	        elif passCheck == "n":
 	            newPass = input("Type in your own new password to use instead:")
-	            saveToFile(newAccount, newPass, authUser)
+	            saveToFile(newAccount, newPass, authUser, fer)
+	            break
+	          
 	    else:
 	        continue
 
 
-## save info to file, a - newaccount, b - new password, c - authenticate
+## save info to file, a - newaccount, b - new password, c - authenticate, d - key
 
-def saveToFile(a, b, c):
+def saveToFile(a, b, c, d):
     if c == "admin":
+        fer = d
         with open("passwords.txt", "a") as file:
-    		encryptedInfo = fer.encrypt((f"\nUser account: {a}\nPassword: {b}").encode)
-    		file.write((encryptedInfo).decode() + "\n")
-        print("New account and password successfully saved!")
+          info = f"\nUser account: {a}\nPassword: {b}"
+          encryptedInfo = fer.encrypt(info.encode())
+          file.write((encryptedInfo).decode() + "\n")
+          print("New account and password successfully saved!")
 
     else:
     	print("Oops, something went wrong...")
+
+
+## welcome to password manager
+
+getMode = input("""Welcome to EasyPy, a simple password manager -
+Type \"view\" to view your saved passwords
+Type \"add\" to add a new password for storage
+:""").lower()
+
+
+while True:
+    if getMode == "q":
+        print("You have successfully logged out.")
+        break
+    
+    elif getMode == "view":
+        showPass()
+        break
+	        
+    elif getMode == "add":
+        addPass()
+        break
+	        
+    else:
+        print("Sorry, you typed an invalid option")
+        continue
